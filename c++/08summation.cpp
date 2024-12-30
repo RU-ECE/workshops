@@ -13,7 +13,11 @@ int sum1 (int a, int b) {
 
 }
 
-float sum2(int a, int b) {
+float sum2a(int a, int b) {
+    float sum = 0;
+}
+
+float sum2b(int a, int b) {
     float sum = 0;
 }
 
