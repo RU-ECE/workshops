@@ -43,9 +43,9 @@ int main() {
     float s1 = sum2a(100);
     float s2 = sum2b(100);
     cout << "s1=" << s1 << ", s2=" << s2 << ", diff=" << (s1-s2) << endl;
-    for (int n = 1; n <= 1000000; n *= 10) {
-       cout << sqrt(6*sum3a(100000)) << '\n';
-       cout << sqrt(6*sum3b(100000)) << '\n';
+    for (int n = 10; n <= 1000000; n *= 10) {
+       cout << sqrt(6*sum3a(n)) << '\n';
+       cout << sqrt(6*sum3b(n)) << '\n';
     }
     return 0;
 
