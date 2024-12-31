@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 /*
     Codeium: STOP INTERFERING
 
@@ -9,6 +10,7 @@
     sum3: mystery sum 1/(1*1) + 1/(2*2) + 1/(3*3) + 1/(4*4) + ... + 1/(n*n)
 */
 
+using namespace std;
 int sum1 (int a, int b) {
 
 }
@@ -36,12 +38,13 @@ int main() {
     for (int i = 0; i <= 100; i++) {
         sum += i;
     }
+    cout << setprecision(8); // print 8 decimal places
     cout << sum << endl;
 
     cout << sum1(5, 50) << '\n';
     cout << sum1(1, 1000000) << '\n'; // wrong, why?
-    float s1 = sum2a(100);
-    float s2 = sum2b(100);
+    float s1 = sum2a(1, 100);
+    float s2 = sum2b(1, 100);
     cout << "s1=" << s1 << ", s2=" << s2 << ", diff=" << (s1-s2) << endl;
     for (int n = 10; n <= 1000000; n *= 10) {
        cout << sqrt(6*sum3a(n)) << '\n';
