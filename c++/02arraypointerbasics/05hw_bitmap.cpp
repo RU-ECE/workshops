@@ -12,7 +12,7 @@ public:
     Bitmap(int w, int h) : width(w), height(h) {
         pixels = new uint32_t[width*height]; // allocate 4*width*height bytes  each pixel has R,G,B, A
         for (int i = 0; i < width*height; i++) {
-            pixels[i] = 0xFF000000;
+            pixels[i] = 0xFF000000; // Intel is little-endian RRGGBBAA
         }
     }
     
@@ -59,7 +59,7 @@ public:
         }
     }
     void save(const char* filename) const {
-                uint8_t* output;
+        uint8_t* output;
         size_t size = WebPEncodeRGBA((uint8_t*)pixels, width, height, width * 4, 100, &output);
         if (size == 0) {
             cerr << "WebPEncode failed" << endl;
@@ -76,66 +76,6 @@ public:
         fwrite(output, size, 1, outFile);
         fclose(outFile);
         WebPFree(output);
-#if 0
-        WebPConfig config;
-        if (!WebPConfigPreset(&config, WEBP_PRESET_PHOTO, 75.0f)) {
-            cerr << "WebPConfigPreset failed" << endl;
-            return;   // version error
-        }
-        // Add additional tuning:
-        config.sns_strength = 90;
-        config.filter_sharpness = 6;
-        config.alpha_quality = 90;
-        if (!WebPValidateConfig(&config)) {
-            cerr << "WebPValidateConfig failed" << endl;
-            return;  // parameter error
-        }
-
-        WebPPicture pic;
-        if (!WebPPictureInit(&pic)) {
-            cerr << "WebPPictureInit failed" << endl;
-            return;  // version error
-        }
-        pic.width = width;
-        pic.height = height;
-        pic.use_argb = 1; // Use ARGB input
-
-        if (!WebPPictureAlloc(&pic)) {
-            cerr << "WebPPictureAlloc failed" << endl;
-            return;   // memory error
-        }
-
-        // Import the pixel data
-        if (!WebPPictureImportRGBA(&pic, (uint8_t*)pixels, width * 4)) {
-            cerr << "WebPPictureImportRGBA failed" << endl;
-            WebPPictureFree(&pic);
-            return;  // import error
-        }
-
-        // Open the file for writing
-        FILE* outFile = fopen(filename, "wb");
-        if (!outFile) {
-            cerr << "Failed to open file for writing" << endl;
-            WebPPictureFree(&pic);
-            return;  // file error
-        }
-
-        // Set up the writer
-        pic.writer = WebPMemoryWrite;
-        pic.custom_ptr = outFile;
-
-        // Encode the picture
-        if (!WebPEncode(&config, &pic)) {
-            cerr << "WebPEncode failed" << endl;
-            fclose(outFile);
-            WebPPictureFree(&pic);
-            return;  // encoding error
-        }
-
-        // Clean up
-        fclose(outFile);
-        WebPPictureFree(&pic);
-#endif
     }
 };
 
