@@ -1,0 +1,9 @@
+*~      # emacs backup file
+*.o     #object file
+a.out   # unix default name for executables
+*.exe
+bin/    # don't write anything in the bin folder
+*.webp
+
+#*          too draconian! save nothing, but save only c++ files?
+#!*.cpp
