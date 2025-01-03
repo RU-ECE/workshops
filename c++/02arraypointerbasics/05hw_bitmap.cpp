@@ -1,6 +1,6 @@
 #include <iostream>
 #include <webp/encode.h>
-
+#include <cstring>
 using namespace std;
 
 class Bitmap {
@@ -11,6 +11,9 @@ private:
 public:
     Bitmap(int w, int h) : width(w), height(h) {
         pixels = new uint32_t[width*height]; // allocate 4*width*height bytes  each pixel has R,G,B, A
+        for (int i = 0; i < width*height; i++) {
+            pixels[i] = 0xFF000000;
+        }
     }
     
     ~Bitmap() {
@@ -56,6 +59,24 @@ public:
         }
     }
     void save(const char* filename) const {
+                uint8_t* output;
+        size_t size = WebPEncodeRGBA((uint8_t*)pixels, width, height, width * 4, 100, &output);
+        if (size == 0) {
+            cerr << "WebPEncode failed" << endl;
+            return;
+        }
+
+        FILE* outFile = fopen(filename, "wb");
+        if (!outFile) {
+            cerr << "Failed to open file for writing" << endl;
+            WebPFree(output);
+            return;
+        }
+
+        fwrite(output, size, 1, outFile);
+        fclose(outFile);
+        WebPFree(output);
+#if 0
         WebPConfig config;
         if (!WebPConfigPreset(&config, WEBP_PRESET_PHOTO, 75.0f)) {
             cerr << "WebPConfigPreset failed" << endl;
@@ -114,13 +135,14 @@ public:
         // Clean up
         fclose(outFile);
         WebPPictureFree(&pic);
+#endif
     }
 };
 
 
 
 int main() {
-    Bitmap b(100, 100);
+    Bitmap b(500, 500);
     b.line(0, 0, 100, 100, 0x00FF00FF);
     b.rect(0, 0, 100, 100, 0x0000FFFF);
     b.circle(50, 50, 40, 0xFF0000FF);
